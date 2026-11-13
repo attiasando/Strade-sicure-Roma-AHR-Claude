@@ -52,6 +52,10 @@ button, .bottone { font: inherit; font-weight: 600; padding: 8px 12px; border: 0
 @media (prefers-color-scheme: dark) { button, .bottone { color: #0b1620; } }
 button.secondario { background: transparent; color: var(--primario); border: 1px solid var(--primario); }
 button:disabled { opacity: .55; cursor: not-allowed; }
+.chip-anni { display: flex; flex-wrap: wrap; gap: 6px; }
+button.chip { padding: 4px 10px; font-size: 13px; background: transparent; color: var(--primario); border: 1px solid var(--primario); }
+button.chip.attivo { background: var(--primario); color: #fff; }
+@media (prefers-color-scheme: dark) { button.chip.attivo { color: #0b1620; } }
 .velocita { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; }
 .velocita select { padding: 4px; }
 .gmaps { display: flex; align-items: center; gap: 10px; border: 1px solid var(--bordo); border-radius: 8px; padding: 6px; }

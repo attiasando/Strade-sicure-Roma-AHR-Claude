@@ -7,6 +7,7 @@ import { percorsi, ServizioPercorsiNonDisponibile } from "./lib/osrm";
 import { cercaLuogo, RicercaNonDisponibile } from "./lib/nominatim";
 import { linkGoogleMaps } from "./lib/gmaps";
 import { VELOCITA } from "./lib/simulazione";
+import { anniDisponibili, perAnno } from "./lib/storico";
 import type { EventoSimulazione, PercorsoMappa, SimulazioneMappa } from "./components/Mappa";
 
 const Mappa = lazy(() => import("./components/Mappa"));
@@ -14,6 +15,8 @@ const PUNTI = punti as PuntoRischio[];
 type ReplayRegistrato = { etichetta: string; partenza: string; arrivo: string; livello: Livello; calcolato_il: string; servizi: string; risultato: EsitoOk };
 // replay.json è un elenco di calcoli reali (accetta anche il vecchio formato a oggetto singolo).
 const REPLAYS = (Array.isArray(replayDati) ? replayDati : [replayDati]) as unknown as ReplayRegistrato[];
+
+const ANNI = anniDisponibili(PUNTI);
 
 const km = (m: number) => `${(m / 1000).toFixed(1)} km`;
 const min = (s: number) => `${Math.round(s / 60)} min`;
@@ -114,6 +117,12 @@ export default function App() {
     } finally { setCalcolo(false); }
   }
 
+  // Layer storico: cambia solo ciò che si vede sulla mappa, non il calcolo dei percorsi.
+  const [anno, setAnno] = useState<number | null>(null);
+  const storico = useMemo(() => perAnno(PUNTI, anno), [anno]);
+  const nAttivi = storico.filter((s) => s.attivo).length;
+  const nEventi = storico.reduce((n, s) => n + s.eventi.length, 0);
+
   // Oggetto stabile finché non cambia l'esito: l'animazione non deve ripartire a ogni render.
   const mappa: PercorsoMappa = useMemo(
     () => (esito?.ok ? { normale: esito.normale.linea, sicuro: esito.sicuro?.linea ?? null, evidenziati: esito.vicini } : null),
@@ -147,7 +156,7 @@ export default function App() {
     <main className="app">
       <div className="area-mappa">
         <Suspense fallback={<div className="mappa" />}>
-          <Mappa punti={PUNTI} percorso={mappa} simulazione={simulazione} onEvento={evento} />
+          <Mappa punti={storico} percorso={mappa} simulazione={simulazione} onEvento={evento} />
         </Suspense>
       </div>
 
@@ -179,6 +188,18 @@ export default function App() {
           {!replay && <select aria-label="Livello di allerta" value={livello} onChange={(e) => setLivello(e.target.value as Livello)}>{LIVELLI.map((l) => <option key={l} value={l}>{l}</option>)}</select>}
         </header>
         <p className="piccolo">L'app non legge ancora l'allerta ufficiale: scegli tu lo scenario da simulare.</p>
+
+        <section aria-label="Storico degli allagamenti" className="riquadro">
+          <strong>Storico degli allagamenti</strong>
+          <div className="chip-anni" role="group" aria-label="Filtra per anno">
+            <button type="button" className={`chip${anno === null ? " attivo" : ""}`} aria-pressed={anno === null} onClick={() => setAnno(null)}>Tutti</button>
+            {ANNI.map((a) => <button key={a} type="button" className={`chip${anno === a ? " attivo" : ""}`} aria-pressed={anno === a} onClick={() => setAnno(a)}>{a}</button>)}
+          </div>
+          <p className="piccolo" aria-live="polite">
+            {anno === null ? `${PUNTI.length} punti, ${nEventi} eventi di cronaca` : `${anno}: ${nAttivi} ${nAttivi === 1 ? "punto" : "punti"}, ${nEventi} ${nEventi === 1 ? "evento" : "eventi"}`}.
+            {" "}Il cerchio è più grande dove ci sono più eventi; tocca un punto per le fonti. Il filtro cambia solo la mappa, non il calcolo del percorso.
+          </p>
+        </section>
 
         <form onSubmit={invia} className="riquadro">
           <label>Partenza<input value={partenza} readOnly={replay} onChange={(e) => setPartenza(e.target.value)} placeholder="Es. Piazza del Popolo" autoComplete="off" /></label>

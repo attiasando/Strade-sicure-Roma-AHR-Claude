@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
 import type { Pt } from "../lib/geo";
 import { lunghezzeCumulative, lunghezzaTotale, puntoAllaDistanza } from "../lib/geo";
-import type { PuntoRischio } from "../lib/regole";
 import { ROMA_CENTRO } from "../lib/regole";
+import type { PuntoStorico } from "../lib/storico";
 import { fermataSuLinea, metriPercorsi } from "../lib/simulazione";
 import type { PuntoVicino } from "../lib/percorso";
 
@@ -19,7 +19,7 @@ const fontiHtml = (f: { data: string; fonte: string }[]) =>
   `<ul style="margin:4px 0 0;padding-left:16px">${f.map((e) => `<li>${esc(e.data)} – <a href="${esc(e.fonte)}" target="_blank" rel="noopener noreferrer">fonte</a></li>`).join("")}</ul>`;
 
 export default function Mappa({ punti, percorso, simulazione, onEvento }: {
-  punti: PuntoRischio[]; percorso: PercorsoMappa; simulazione: SimulazioneMappa; onEvento: (e: EventoSimulazione) => void;
+  punti: PuntoStorico[]; percorso: PercorsoMappa; simulazione: SimulazioneMappa; onEvento: (e: EventoSimulazione) => void;
 }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -53,9 +53,15 @@ export default function Mappa({ punti, percorso, simulazione, onEvento }: {
     const g = stratoPunti.current;
     if (!g) return;
     g.clearLayers();
-    for (const p of punti) {
-      L.circleMarker([p.lat, p.lon], { radius: 9, color: COL.arancio, fillColor: COL.arancio, fillOpacity: 0.55, weight: 2 })
-        .bindPopup(`<strong>${esc(p.nome)}</strong><br/>${esc(p.quartiere)}<br/>Eventi registrati: ${p.eventi.length}${fontiHtml(p.eventi)}${p.nota ? `<p style="margin:6px 0 0;font-size:11px">${esc(p.nota)}</p>` : ""}`)
+    for (const { punto: p, eventi, attivo } of punti) {
+      const col = attivo ? COL.arancio : COL.grigio;
+      // Raggio proporzionale agli eventi mostrati; i punti senza eventi nell'anno scelto restano piccoli e grigi.
+      const raggio = attivo ? Math.min(9 + (eventi.length - 1) * 3, 18) : 6;
+      const conteggio = eventi.length === p.eventi.length
+        ? `Eventi registrati: ${p.eventi.length}`
+        : `Eventi nell'anno scelto: ${eventi.length} (totale ${p.eventi.length})`;
+      L.circleMarker([p.lat, p.lon], { radius: raggio, color: col, fillColor: col, fillOpacity: attivo ? 0.55 : 0.25, weight: 2 })
+        .bindPopup(`<strong>${esc(p.nome)}</strong><br/>${esc(p.quartiere)}<br/>${conteggio}${fontiHtml(attivo ? eventi : p.eventi)}${p.nota ? `<p style="margin:6px 0 0;font-size:11px">${esc(p.nota)}</p>` : ""}`)
         .addTo(g);
     }
   }, [punti]);
