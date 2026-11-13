@@ -11,6 +11,7 @@ import { anniDisponibili, perAnno } from "./lib/storico";
 import type { EventoSimulazione, PercorsoMappa, SimulazioneMappa } from "./components/Mappa";
 
 const Mappa = lazy(() => import("./components/Mappa"));
+const Segnala = lazy(() => import("./components/Segnala"));
 const PUNTI = punti as PuntoRischio[];
 type ReplayRegistrato = { etichetta: string; partenza: string; arrivo: string; livello: Livello; calcolato_il: string; servizi: string; risultato: EsitoOk };
 // replay.json è un elenco di calcoli reali (accetta anche il vecchio formato a oggetto singolo).
@@ -153,20 +154,23 @@ export default function App() {
   }, []);
 
   return (
-    <main className="app">
+    <div className="app">
+      <header className="testata">
+        <h1 translate="no"><span>Strade Sicure</span> Roma</h1>
+        <nav aria-label="Principale"><a href="#come-funziona" onClick={() => setAperto(true)}>Come funziona</a></nav>
+      </header>
+      <div className="fascia-bordeaux" aria-hidden="true" />
+      <p className="fascia-oro" role="note"><span aria-hidden="true">⚠ </span>Progetto indipendente, non ufficiale: non è un servizio di Roma Capitale e non legge l'allerta ufficiale.</p>
+      <main className="corpo">
       <div className="area-mappa">
         <Suspense fallback={<div className="mappa" />}>
-          <Mappa punti={storico} percorso={mappa} simulazione={simulazione} onEvento={evento} />
+          <Mappa punti={storico}percorso={mappa} simulazione={simulazione} onEvento={evento} />
         </Suspense>
       </div>
 
       <div className={`pannello${aperto ? "" : " chiuso"}`}>
         <div className="titolo">
-          <strong>Strade Sicure Roma</strong>
-          <span className="azioni-titolo">
-            <a href="#come-funziona" onClick={() => setAperto(true)}>Come funziona</a>
-            <button type="button" className="secondario toggle-pannello" aria-expanded={aperto} onClick={() => setAperto((a) => !a)}>{aperto ? "Mostra la mappa" : "Mostra il pannello"}</button>
-          </span>
+          <button type="button" className="secondario toggle-pannello" aria-expanded={aperto} onClick={() => setAperto((a) => !a)}>{aperto ? "Mostra la mappa" : "Mostra il pannello"}</button>
         </div>
         <div className="contenuto">
 
@@ -202,8 +206,8 @@ export default function App() {
         </section>
 
         <form onSubmit={invia} className="riquadro">
-          <label>Partenza<input value={partenza} readOnly={replay} onChange={(e) => setPartenza(e.target.value)} placeholder="Es. Piazza del Popolo" autoComplete="off" /></label>
-          <label>Arrivo<input value={arrivo} readOnly={replay} onChange={(e) => setArrivo(e.target.value)} placeholder="Es. Stazione Termini" autoComplete="off" /></label>
+          <label>Partenza<input value={partenza} readOnly={replay} onChange={(e) => setPartenza(e.target.value)} name="partenza" placeholder="Es. Piazza del Popolo…" autoComplete="off" spellCheck={false} /></label>
+          <label>Arrivo<input value={arrivo} readOnly={replay} onChange={(e) => setArrivo(e.target.value)} name="arrivo" placeholder="Es. Stazione Termini…" autoComplete="off" spellCheck={false} /></label>
           <button type="submit" disabled={calcolo}>{calcolo ? "Calcolo in corso…" : "Controlla percorso"}</button>
           {!replay && <p className="piccolo">Gli indirizzi vengono inviati a Nominatim e a OSRM per trovare le coordinate e il percorso. Questa app non li salva.</p>}
         </form>
@@ -214,6 +218,8 @@ export default function App() {
             onAvvia={avvia} onPausa={() => setSimStato("pausa")} onRicomincia={ricomincia} onVelocita={setSimVelocita} />
         )}
 
+        <Suspense fallback={null}><Segnala /></Suspense>
+
         <details id="come-funziona" className="riquadro">
           <summary><strong>Come funziona</strong></summary>
           <p className="piccolo">1. <strong>Mappa storica:</strong> {PUNTI.length} punti verificati, ognuno con almeno due eventi di cronaca e link alle fonti. L'agente storico (script con Exa) cerca nuove notizie; ogni punto passa da un controllo di fonti e coordinate prima di essere usato.</p>
@@ -223,8 +229,9 @@ export default function App() {
         </details>
         </div>
       </div>
+      </main>
 
       <footer className="avviso-112">In caso di pericolo chiama il <a href="tel:112">112</a>. Questa app non sostituisce i soccorsi.</footer>
-    </main>
+    </div>
   );
 }
