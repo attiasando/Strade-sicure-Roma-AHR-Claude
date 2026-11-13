@@ -11,7 +11,9 @@ import type { EventoSimulazione, PercorsoMappa, SimulazioneMappa } from "./compo
 
 const Mappa = lazy(() => import("./components/Mappa"));
 const PUNTI = punti as PuntoRischio[];
-const REPLAY = replayDati as { etichetta: string; partenza: string; arrivo: string; livello: Livello; calcolato_il: string; servizi: string; risultato: EsitoOk };
+type ReplayRegistrato = { etichetta: string; partenza: string; arrivo: string; livello: Livello; calcolato_il: string; servizi: string; risultato: EsitoOk };
+// replay.json è un elenco di calcoli reali (accetta anche il vecchio formato a oggetto singolo).
+const REPLAYS = (Array.isArray(replayDati) ? replayDati : [replayDati]) as unknown as ReplayRegistrato[];
 
 const km = (m: number) => `${(m / 1000).toFixed(1)} km`;
 const min = (s: number) => `${Math.round(s / 60)} min`;
@@ -75,16 +77,24 @@ function PannelloSimulazione({ stato, chiave, finita, velocita, messaggi, onAvvi
 }
 
 export default function App() {
+  const [aperto, setAperto] = useState(true); // pannello aperto (rilevante solo su telefono)
   const [replay, setReplay] = useState(true);
-  const [livello, setLivello] = useState<Livello>(REPLAY.livello);
-  const [partenza, setPartenza] = useState(REPLAY.partenza);
-  const [arrivo, setArrivo] = useState(REPLAY.arrivo);
+  const [indiceReplay, setIndiceReplay] = useState(0);
+  const REPLAY = REPLAYS[indiceReplay]!;
+  const [livello, setLivello] = useState<Livello>(REPLAYS[0]!.livello);
+  const [partenza, setPartenza] = useState(REPLAYS[0]!.partenza);
+  const [arrivo, setArrivo] = useState(REPLAYS[0]!.arrivo);
   const [calcolo, setCalcolo] = useState(false);
-  const [esito, setEsito] = useState<Esito | null>(REPLAY.risultato);
+  const [esito, setEsito] = useState<Esito | null>(REPLAYS[0]!.risultato);
+
+  function caricaReplay(i: number) {
+    const r = REPLAYS[i]!;
+    setIndiceReplay(i); setLivello(r.livello); setPartenza(r.partenza); setArrivo(r.arrivo); setEsito(r.risultato);
+  }
 
   function cambiaReplay(attivo: boolean) {
     setReplay(attivo);
-    if (attivo) { setLivello(REPLAY.livello); setPartenza(REPLAY.partenza); setArrivo(REPLAY.arrivo); setEsito(REPLAY.risultato); }
+    if (attivo) { caricaReplay(indiceReplay); }
     else { setPartenza(""); setArrivo(""); setLivello("verde"); setEsito(null); }
   }
 
@@ -118,8 +128,10 @@ export default function App() {
   const simulazione: SimulazioneMappa = useMemo(() => ({ chiave: simChiave, stato: simStato, velocita: simVelocita }), [simChiave, simStato, simVelocita]);
   useEffect(() => { setSimChiave(0); setSimStato("ferma"); setSimMessaggi([]); setSimFinita(false); }, [mappa]);
 
-  const ricomincia = () => { setSimChiave((c) => c + 1); setSimMessaggi([]); setSimFinita(false); setSimStato("in_corso"); };
-  const avvia = () => { if (simChiave === 0 || simFinita) ricomincia(); else setSimStato("in_corso"); };
+  // Su telefono il pannello occupa molto spazio: lo chiudiamo quando parte la simulazione, per vedere la mappa.
+  const chiudiSuTelefono = () => { if (window.matchMedia("(max-width: 759px)").matches) setAperto(false); };
+  const ricomincia = () => { setSimChiave((c) => c + 1); setSimMessaggi([]); setSimFinita(false); setSimStato("in_corso"); chiudiSuTelefono(); };
+  const avvia = () => { if (simChiave === 0 || simFinita) ricomincia(); else { setSimStato("in_corso"); chiudiSuTelefono(); } };
   const evento = useCallback((e: EventoSimulazione) => {
     const aggiungi = (m: string) => setSimMessaggi((x) => [...x, m]);
     if (e.tipo === "fermo") aggiungi(`Percorso normale: fermo davanti a «${e.nome}», allagato.`);
@@ -139,13 +151,27 @@ export default function App() {
         </Suspense>
       </div>
 
-      <div className="pannello">
-        <div className="titolo"><strong>Strade Sicure Roma</strong><a href="#come-funziona">Come funziona</a></div>
+      <div className={`pannello${aperto ? "" : " chiuso"}`}>
+        <div className="titolo">
+          <strong>Strade Sicure Roma</strong>
+          <span className="azioni-titolo">
+            <a href="#come-funziona" onClick={() => setAperto(true)}>Come funziona</a>
+            <button type="button" className="secondario toggle-pannello" aria-expanded={aperto} onClick={() => setAperto((a) => !a)}>{aperto ? "Mostra la mappa" : "Mostra il pannello"}</button>
+          </span>
+        </div>
+        <div className="contenuto">
 
         <label className="riquadro riga interruttore">
           <span><strong>Replay di un calcolo reale</strong></span>
           <input type="checkbox" role="switch" checked={replay} onChange={(e) => cambiaReplay(e.target.checked)} disabled={calcolo} />
         </label>
+        {replay && REPLAYS.length > 1 && (
+          <label>Calcolo registrato
+            <select value={indiceReplay} onChange={(e) => caricaReplay(Number(e.target.value))}>
+              {REPLAYS.map((r, i) => <option key={r.etichetta} value={i}>{r.etichetta}</option>)}
+            </select>
+          </label>
+        )}
         {replay && <p className="piccolo">Calcolo reale del {new Date(REPLAY.calcolato_il).toLocaleString("it-IT")}: {REPLAY.etichetta}. Percorsi da OpenStreetMap (OSRM), registrati e riprodotti senza nuove richieste.</p>}
 
         <header className={`allerta allerta-${livello}`}>
@@ -174,6 +200,7 @@ export default function App() {
           <p className="piccolo">3. <strong>Limiti:</strong> pochi punti, posizioni precise al livello dell'incrocio, nessuna previsione ufficiale. Non sostituisce i soccorsi.</p>
           <p className="piccolo">Dati: © OpenStreetMap contributors (ODbL), OSRM, Nominatim; confini quartieri: Roma Capitale (GeoRoma, dati aperti).</p>
         </details>
+        </div>
       </div>
 
       <footer className="avviso-112">In caso di pericolo chiama il <a href="tel:112">112</a>. Questa app non sostituisce i soccorsi.</footer>

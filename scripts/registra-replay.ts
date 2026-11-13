@@ -46,6 +46,11 @@ if (args[0] === "--prova") {
   if (!esito.sicuro || esito.alternativaFallita) throw new Error("Nessuna alternativa reale: nulla salvato.");
   if (!esito.vicini.some((v) => v.evitato)) throw new Error("Nessun punto aggirato: nulla salvato.");
   const replay = { etichetta: `${da} → ${a}`, partenza: da, arrivo: a, livello, calcolato_il: new Date().toISOString(), servizi: "OSRM (router.project-osrm.org) e Nominatim, dati © OpenStreetMap contributors (ODbL)", risultato: esito };
-  fs.writeFileSync(new URL("../src/data/replay.json", import.meta.url), JSON.stringify(replay));
+  // replay.json è un elenco: aggiunge o sostituisce il replay con la stessa etichetta (accetta anche il vecchio formato a oggetto singolo).
+  const file = new URL("../src/data/replay.json", import.meta.url);
+  let elenco: { etichetta: string }[] = [];
+  try { const letto = JSON.parse(fs.readFileSync(file, "utf8")); elenco = Array.isArray(letto) ? letto : [letto]; } catch { /* primo replay */ }
+  elenco = [...elenco.filter((r) => r.etichetta !== replay.etichetta), replay];
+  fs.writeFileSync(file, JSON.stringify(elenco));
   console.log(`Salvato replay: ${replay.etichetta}, normale ${(esito.normale.distanzaM / 1000).toFixed(1)} km, alternativa ${(esito.sicuro.distanzaM / 1000).toFixed(1)} km, aggira ${esito.vicini.filter((v) => v.evitato).map((v) => v.nome).join("; ")}`);
 }

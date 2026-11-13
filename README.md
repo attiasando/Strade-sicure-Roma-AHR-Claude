@@ -14,7 +14,7 @@ Durante un'allerta meteo a Roma molti si mettono in viaggio senza sapere che il 
 - **Percorso alternativo:** con allerta arancione o rossa cerca un tragitto che aggira i punti con almeno due eventi.
 - **Apri in Google Maps** (link e QR code), con 2-3 tappe lungo il percorso alternativo.
 - **Simulazione del viaggio:** due veicoli partono insieme; quello sul percorso normale si ferma davanti al sottopasso allagato, quello sul percorso alternativo lo aggira.
-- **Replay di un calcolo reale:** un calcolo vero (Saxa Rubra → Stazione Termini) registrato e riproducibile senza nuove richieste.
+- **Replay di calcoli reali:** due calcoli veri (Saxa Rubra → Stazione Termini, Ponte di Nona → Stazione Termini) registrati e riproducibili senza nuove richieste.
 
 ## Gli agenti
 
@@ -26,8 +26,8 @@ Durante un'allerta meteo a Roma molti si mettono in viaggio senza sapere che il 
 
 ## Stato reale e limiti (leggere prima di giudicare)
 
-- **Tre punti verificati**: sottopasso di via dei Due Ponti, sottopasso di via Collatina (via Longoni), sottopasso della stazione Tiburtina. Le fonti sono state scaricate e controllate: nominano il luogo e parlano di allagamento (date 2014-2019).
-- **Posizioni:** ricavate da OpenStreetMap a livello di incrocio o galleria. La posizione esatta del sottopasso non è stata verificata sul posto; la nota di ogni punto lo dice.
+- **Quattro punti verificati**: sottopasso di via dei Due Ponti, sottopasso di via Collatina (via Longoni), sottopasso della stazione Tiburtina, sottopasso ferroviario di via Pasquale Baffi (Portuense). Per ognuno ci sono due eventi datati (2014-2026): le fonti sono state scaricate e controllate, nominano il luogo e parlano di allagamento.
+- **Posizioni:** ricavate da OpenStreetMap a livello di incrocio, galleria o ponte (via Baffi è la meno precisa: circa 75 m). La posizione esatta del sottopasso non è stata verificata sul posto; la nota di ogni punto lo dice.
 - **L'allerta non è letta da fonti ufficiali:** il livello (verde, gialla, arancione, rossa) lo sceglie l'utente. Non c'è ancora l'integrazione con Protezione Civile.
 - **Nessun avviso vocale** in questa versione.
 - **Lo script dell'agente storico con Exa è scritto e le sue funzioni di estrazione sono testate, ma non è stato eseguito con una chiave reale.** Un candidato nuovo non finisce mai in `src/data/punti.json` da solo.
