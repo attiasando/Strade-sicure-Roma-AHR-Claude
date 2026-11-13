@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "agente:storico": "vite-node scripts/agente-storico.ts --",
+    "agente:settimanale": "vite-node scripts/aggiorna-storico.ts --",
     "agente:replay": "vite-node scripts/registra-replay.ts --"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
     "leaflet": "^1.9.4",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",

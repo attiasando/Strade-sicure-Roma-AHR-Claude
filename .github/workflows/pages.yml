@@ -21,7 +21,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # Valori pubblici per natura (URL e chiave "publishable"), tenuti fuori dal repo come Variables di GitHub.
+      # Se non sono impostati, il sito si pubblica lo stesso e la sezione segnalazioni non compare.
       - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

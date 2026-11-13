@@ -36,7 +36,8 @@ Durante un'allerta meteo a Roma molti si mettono in viaggio senza sapere che il 
 
 ## Privacy
 
-- Nessun dato personale salvato: non c'è un server né un database.
+- Calcolo dei percorsi, mappa e storico: nessun dato personale salvato, nessun nostro server.
+- **Segnalazioni (facoltative, solo utenti registrati):** se un utente segnala un punto, si registra con un link via email e invia luogo, indirizzo di un articolo, eventuale data e **una foto obbligatoria**. Conserviamo l'email (solo per l'accesso, in Supabase Auth), i dati inseriti e la foto, in un database e in un bucket **privati** ([Supabase](https://supabase.com), regione UE). Email e foto non vengono mai mostrate né pubblicate e l'app non le espone a nessuno; ogni utente vede solo le proprie segnalazioni. Prima dell'invio il browser elimina dalla foto i metadati (EXIF, posizione GPS). Limite di 5 segnalazioni ogni 24 ore. Una segnalazione è solo una proposta: diventa un punto dopo un controllo e con almeno due fonti datate. Schema e regole di sicurezza: `supabase/schema.sql`.
 - Gli indirizzi che scrivi vengono inviati dal tuo browser a **Nominatim** (ricerca indirizzi) e le coordinate a **OSRM** (percorsi). Questa app non li salva né li registra. Il replay usa solo luoghi pubblici.
 - Nessuna chiave API nel sito. La chiave Exa serve solo allo script locale dell'agente storico e sta in `.env`, che git ignora.
 
@@ -63,6 +64,6 @@ Nuovo replay: `npm run agente:replay -- "Saxa Rubra" "Stazione Termini" rossa` (
 
 ## Tecnologie e dati
 
-React, TypeScript, Vite, Leaflet. Percorsi: [OSRM](https://project-osrm.org/) (servizio demo). Indirizzi: [Nominatim](https://nominatim.org/). Mappa e dati stradali: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL). Confini dei quartieri usati per assegnare il quartiere: Roma Capitale (GeoRoma, dati aperti) tramite il progetto `quartieri-roma-2026` di Urbe Hub.
+React, TypeScript, Vite, Leaflet. Percorsi: [OSRM](https://project-osrm.org/) (servizio demo). Indirizzi: [Nominatim](https://nominatim.org/). Segnalazioni: [Supabase](https://supabase.com) (accesso, database e archivio foto privati). Mappa e dati stradali: © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL). Confini dei quartieri usati per assegnare il quartiere: Roma Capitale (GeoRoma, dati aperti) tramite il progetto `quartieri-roma-2026` di Urbe Hub.
 
 Ricerca storica: [Exa](https://exa.ai).
