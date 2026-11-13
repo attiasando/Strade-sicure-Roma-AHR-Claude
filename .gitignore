@@ -7,3 +7,6 @@ dist
 .DS_Store
 # Output grezzo dell'agente storico: contiene testo di articoli, non va nel repo
 data/grezzo/
+
+# Candidati dell'agente storico non ancora controllati
+data/candidati-nuovi.json

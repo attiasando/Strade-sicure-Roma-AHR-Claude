@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Hook pre-commit: blocca file sensibili e chiavi, poi esegue test e build.
+# Se fallisce si corregge la causa: non si aggira (niente --no-verify).
+set -u
+cd "$(git rev-parse --show-toplevel)"
+
+# Node 22 (nvm) se disponibile
+if [ -s "$HOME/.nvm/nvm.sh" ]; then . "$HOME/.nvm/nvm.sh" >/dev/null 2>&1; nvm use 22 >/dev/null 2>&1 || true; fi
+
+fail() { echo "✖ pre-commit: $1" >&2; exit 1; }
+
+# 1) file sensibili in staging
+vietati=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env($|\.)|candidati-nuovi\.json|\.pem$|\.key$|backup|export-personale' | grep -v '^\.env\.example$' || true)
+[ -z "$vietati" ] || fail "file sensibili in staging:
+$vietati
+Toglili con: git restore --staged <file>"
+
+# 2) chiavi o segreti nelle righe aggiunte (package-lock escluso)
+sospetti=$(git diff --cached -U0 -- . ':!package-lock.json' | grep -E '^\+' | grep -Ei "api[_-]?key[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9_-]{16,}|sk-[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE)|eyJ[A-Za-z0-9_-]{30,}\.eyJ" || true)
+[ -z "$sospetti" ] || fail "possibile chiave o segreto nelle modifiche (righe nascoste per sicurezza). Controlla con: git diff --cached"
+
+# 3) test e build
+npm test --silent || fail "i test non passano"
+npm run build --silent || fail "la build non passa"
+echo "✔ pre-commit: controlli superati"

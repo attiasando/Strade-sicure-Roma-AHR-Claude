@@ -5,6 +5,8 @@
 
 Durante un'allerta meteo a Roma molti si mettono in viaggio senza sapere che il loro percorso passa da sottopassi e strade che si allagano spesso. Strade Sicure Roma controlla il percorso, avvisa se attraversa un punto a rischio e propone un'alternativa che lo aggira, apribile in Google Maps.
 
+**Sito online:** https://attiasando.github.io/Strade-sicure-Roma-AHR-Claude/ (GitHub Pages, build automatica a ogni push su `main`).
+
 ## Cosa fa
 
 - **Mappa storica:** punti a rischio ricavati dalla cronaca, ognuno con almeno **due eventi datati** e i link agli articoli.
