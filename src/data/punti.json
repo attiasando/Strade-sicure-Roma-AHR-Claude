@@ -1,0 +1,44 @@
+[
+  {
+    "id": "due-ponti",
+    "nome": "Sottopasso di via dei Due Ponti (via Flaminia)",
+    "tipo": "sottopasso",
+    "quartiere": "Tor di Quinto · Municipio XV",
+    "lat": 41.95328,
+    "lon": 12.48451,
+    "eventi": [
+      { "data": "2014-12-03", "fonte": "https://www.osservatoreitalia.eu/roma-sottopasso-due-ponti-ancora-allagamenti/" },
+      { "data": "2018-04-09", "fonte": "https://www.romatoday.it/cronaca/chiuso-sottopasso-via-dei-due-ponti-oggi-9-aprile-2018.html" }
+    ],
+    "verificato": true,
+    "nota": "Coordinate: incrocio tra via dei Due Ponti e via Flaminia da OpenStreetMap. La posizione esatta del sottopasso non è stata verificata sul posto."
+  },
+  {
+    "id": "collatina-longoni",
+    "nome": "Sottopasso di via Collatina (altezza via Longoni)",
+    "tipo": "sottopasso",
+    "quartiere": "Longoni - Maggiolino · Municipio V",
+    "lat": 41.9049,
+    "lon": 12.6017,
+    "eventi": [
+      { "data": "2014-11-07", "fonte": "https://www.leggo.it/news/roma/maltempo_roma_allagamenti_metro-683321.html" },
+      { "data": "2017-12-13", "fonte": "https://www.leggo.it/italia/roma/roma_maltempo_allagamenti_traffico_strade_chiuse_13_dicembre_2017-3425664.html" }
+    ],
+    "verificato": true,
+    "nota": "Coordinate: incrocio tra via Collatina e via Achille Longoni da OpenStreetMap. La posizione esatta del sottopasso non è stata verificata sul posto."
+  },
+  {
+    "id": "stazione-tiburtina",
+    "nome": "Sottopasso della stazione Tiburtina",
+    "tipo": "sottopasso",
+    "quartiere": "Portonaccio - Monti di Pietralata · Municipio IV",
+    "lat": 41.91253,
+    "lon": 12.53174,
+    "eventi": [
+      { "data": "2014-11-07", "fonte": "https://www.leggo.it/news/roma/maltempo_roma_allagamenti_metro-683321.html" },
+      { "data": "2019-07-28", "fonte": "https://www.romatoday.it/cronaca/allagamenti-roma-oggi-maltempo.html" }
+    ],
+    "verificato": true,
+    "nota": "Coordinate: galleria stradale «Circonvallazione della Stazione Tiburtina» da OpenStreetMap. Le fonti parlano genericamente di «sottopasso della stazione Tiburtina»: la corrispondenza con questa galleria è probabile, non certa."
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "descrizione": "Luoghi con una fonte che nomina un allagamento (testo dell'articolo controllato) ma SENZA coordinate verificate né due eventi: non vengono mostrati né aggirati dall'app. L'agente storico li usa come punto di partenza.",
+  "candidati": [
+    { "nome": "Sottopasso di Viale del Muro Torto", "data": "2018-08-17", "fonte": "https://www.dire.it/17-08-2018/227026-maltempo-roma-grandinata-allaga-sottopasso-muro-torto-video/" },
+    { "nome": "Sottopasso di Porta di Roma (via della Bufalotta)", "data": "2018-09-06", "fonte": "https://www.romatoday.it/zone/montesacro/altre/sottopassaggio-chiuso-per-allagamenti-a-porta-di-roma.html" },
+    { "nome": "Sottopasso di Lungotevere in Sassia (verso via Gregorio VII)", "data": "2019-11-16", "fonte": "https://www.ilmessaggero.it/roma/news/maltempo_allagato_sottopasso_gregorio_alberi_pali_oggi_ultime_notizie-4867243.html" },
+    { "nome": "Via Luigi Russolo (La Rustica)", "data": "2019-07-28", "fonte": "https://www.romatoday.it/cronaca/allagamenti-roma-oggi-maltempo.html" },
+    { "nome": "Sottopasso ferroviario di via Baffi (Portuense)", "data": "2026-02-12", "fonte": "https://roma.repubblica.it/cronaca/2026/02/12/news/nubifragio_roma_strade_chiuse_traffico_tilt_11_febbraio-425153546/" },
+    { "nome": "Via Cristoforo Colombo (altezza Garbatella)", "data": "2025-09-10", "fonte": "https://www.lacapitale.it/articolo/roma-sottacqua-autobus-surfa-tra-le-vie-allagate-e-la-cassia-sud-chiusa-per-nubifragio" }
+  ]
+}
