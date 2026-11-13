@@ -34,10 +34,14 @@
       {
         "data": "2017-12-13",
         "fonte": "https://www.leggo.it/italia/roma/roma_maltempo_allagamenti_traffico_strade_chiuse_13_dicembre_2017-3425664.html"
+      },
+      {
+        "data": "2026-01-06",
+        "fonte": "https://www.lanotiziaoggi.it/54162/maltempo-strade-chiuse-e-traffico-deviato-su-salaria-appia-e-collatina/"
       }
     ],
     "verificato": true,
-    "nota": "Coordinate: incrocio tra via Collatina e via Achille Longoni da OpenStreetMap. La posizione esatta del sottopasso non è stata verificata sul posto."
+    "nota": "Coordinate: incrocio tra via Collatina e via Achille Longoni da OpenStreetMap. La posizione esatta del sottopasso non è stata verificata sul posto. L'evento del 6 gennaio 2026 riguarda il tratto di via Collatina tra via dell'Acqua Vergine e via Longoni chiuso per allagamento: l'articolo non nomina esplicitamente il sottopasso."
   },
   {
     "id": "stazione-tiburtina",
@@ -70,6 +74,10 @@
       {
         "data": "2026-02-12",
         "fonte": "https://roma.repubblica.it/cronaca/2026/02/12/news/nubifragio_roma_strade_chiuse_traffico_tilt_11_febbraio-425153546/"
+      },
+      {
+        "data": "2026-03-12",
+        "fonte": "https://www.ilmarforio.it/roma-sotto-la-pioggia-strade-allagate-tra-magliana-e-trullo-infiltrazioni-nel-mercato-del-trullo/"
       },
       {
         "data": "2026-09-10",
