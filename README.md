@@ -30,7 +30,7 @@ Durante un'allerta meteo a Roma molti si mettono in viaggio senza sapere che il 
 - **Posizioni:** ricavate da OpenStreetMap a livello di incrocio, galleria o ponte (via Baffi è la meno precisa: circa 75 m). La posizione esatta del sottopasso non è stata verificata sul posto; la nota di ogni punto lo dice.
 - **L'allerta non è letta da fonti ufficiali:** il livello (verde, gialla, arancione, rossa) lo sceglie l'utente. Non c'è ancora l'integrazione con Protezione Civile.
 - **Nessun avviso vocale** in questa versione.
-- **Lo script dell'agente storico con Exa è scritto e le sue funzioni di estrazione sono testate, ma non è stato eseguito con una chiave reale.** Un candidato nuovo non finisce mai in `src/data/punti.json` da solo.
+- **L'agente storico con Exa è stato eseguito** (anni 2025 e 2026) e ha prodotto circa 180 candidati grezzi, rumorosi (molte strade lunghe e generiche), che non sono stati controllati uno per uno. Un candidato nuovo non finisce mai in `src/data/punti.json` da solo: i 4 punti attuali sono stati verificati a mano su fonti scaricate.
 - Il servizio percorsi (OSRM demo) e la ricerca indirizzi (Nominatim) sono servizi pubblici gratuiti: possono essere lenti o limitare le richieste.
 - Google Maps può ricalcolare un tracciato diverso. **Nessun percorso è garantito sicuro.**
 
